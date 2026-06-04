@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.Users;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,5 +39,18 @@ namespace api.Controllers
             }
             return Ok(user.ToGetUserDto());
         }
+
+        [HttpPost]
+
+        public IActionResult Create([FromBody] PostUserRequestDto userDto)
+        {
+            var userModel = userDto.ToUserFromPostRequestDto();
+
+            _context.Users.Add(userModel);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetByID), new { id = userModel.Id}, userModel.ToGetUserDto());
+        }
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.Accounts;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,18 @@ namespace api.Controllers
                 return NotFound();
             }
             return Ok(account.ToGetAccountDto());
+        }
+
+        [HttpPost]
+
+        public IActionResult Create([FromBody] PostAccountRequestDto accountDto)
+        {
+            var accountModel = accountDto.ToAccountFromPostRequestDto();
+
+            _context.Accounts.Add(accountModel);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetByID), new { id = accountModel.Id}, accountModel.ToGetAccountDto());
         }
     }
 }

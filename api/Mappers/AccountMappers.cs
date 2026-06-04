@@ -19,5 +19,15 @@ namespace api.Mappers
                 AccountNumber = account.AccountNumber
             };
         }
+
+        public static Account ToAccountFromPostRequestDto(this PostAccountRequestDto accountDto) {
+            return new Account
+            {
+                UserId = accountDto.UserId,
+                Balance = 0,
+                AccountNumber = accountDto.AccountNumber
+            };
+        }
     }
+
 }
