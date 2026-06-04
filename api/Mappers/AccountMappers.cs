@@ -14,6 +14,7 @@ namespace api.Mappers
         {
             return new GetAccountDto
             {
+                Id = account.Id,
                 UserId = account.UserId,
                 Balance = account.Balance,
                 AccountNumber = account.AccountNumber
