@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using api.Data;
+using api.Mappers;
+using Microsoft.AspNetCore.Mvc;
+
+namespace api.Controllers
+{
+    [Route("api/accounts")]
+    [ApiController]
+    public class AccountControllers : ControllerBase
+    {
+        private readonly ApplicationDBContext _context;
+
+        public AccountControllers(ApplicationDBContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+
+        public IActionResult GetAll()
+        {
+            var accounts = _context.Accounts.ToList().Select(s => s.ToGetAccountDto());
+
+            return Ok(accounts);
+        }
+
+        [HttpGet("{id}")]
+
+        public async Task<IActionResult> GetByID(int id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+            if(account == null)
+            {
+                return NotFound();
+            }
+            return Ok(account.ToGetAccountDto());
+        }
+    }
+}

@@ -21,16 +21,16 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Account", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("int");
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -60,6 +60,10 @@ namespace api.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
 
