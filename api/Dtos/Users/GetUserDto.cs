@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Accounts;
+using Microsoft.AspNetCore.Mvc;
 
-namespace api.Dtos.Stocks
+namespace api.Dtos.Users
 {
     public class GetUserDto
     {
@@ -18,5 +20,7 @@ namespace api.Dtos.Stocks
         public string Email { get; set; } = string.Empty;
 
         public string PhoneNumber { get; set; } = string.Empty;
+
+        public List<GetAccountDto> Accounts { get; set; } = new List<GetAccountDto>();
     }
 }

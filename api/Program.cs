@@ -19,6 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson( option =>
+{
+   option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; 
+});
 
 var server = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
 var database = Environment.GetEnvironmentVariable("DB_NAME") ?? "database";

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Dtos.Stocks;
 using api.Dtos.Users;
 using api.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace api.Mappers
 {
@@ -19,7 +19,8 @@ namespace api.Mappers
                 LastName = user.LastName,
                 Age = user.Age,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                Accounts = user.Accounts.Select(a => a.ToGetAccountDto()).ToList()
             };
         }
 
