@@ -72,5 +72,22 @@ namespace api.Controllers
 
             return Ok(accountModel.ToGetAccountDto());
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var accountModel = _context.Accounts.Find(id);
+
+            if(accountModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.Accounts.Remove(accountModel);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
