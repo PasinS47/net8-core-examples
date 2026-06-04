@@ -53,5 +53,24 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetByID), new { id = accountModel.Id}, accountModel.ToGetAccountDto());
         }
+
+        [HttpPut]
+        [Route("{id}")]
+
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAccountRequestDto accountDto)
+        {
+            var accountModel = await _context.Accounts.FindAsync(id);
+
+            if(accountModel == null)
+            {
+                return NotFound();
+            }
+
+            accountModel.Balance = accountDto.Balance;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(accountModel.ToGetAccountDto());
+        }
     }
 }

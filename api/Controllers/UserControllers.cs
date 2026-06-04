@@ -52,5 +52,25 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetByID), new { id = userModel.Id}, userModel.ToGetUserDto());
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
+        {
+            var userModel = await _context.Users.FindAsync(id);
+            if (userModel == null)
+            {
+                return NotFound();
+            }
+
+            userModel.FirstName = userDto.FirstName;
+            userModel.LastName = userDto.LastName;
+            userModel.Age = userDto.Age;
+            userModel.Email = userDto.Email;
+            userModel.PhoneNumber = userDto.PhoneNumber;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(userModel.ToGetUserDto());
+        }
     }
 }
