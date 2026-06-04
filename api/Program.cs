@@ -1,4 +1,6 @@
 using api.Data;
+using api.Interfaces;
+using api.Repository;
 using DotNetEnv;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySQL(connectionString);
 });
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

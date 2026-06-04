@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Users;
+using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Mysqlx;
 
 namespace api.Controllers
 {
@@ -13,26 +15,27 @@ namespace api.Controllers
     [ApiController]
     public class UserControllers : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
 
-        public UserControllers(ApplicationDBContext context)
+        private readonly IUserRepository _userRepo;
+
+        public UserControllers(IUserRepository userRepo)
         {
-            _context = context;
+            _userRepo = userRepo;
         }
 
         [HttpGet]
 
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _context.Users.ToList().Select(s => s.ToGetUserDto());
+            var users = await _userRepo.GetAllAsync();
             
-            return Ok(users);
+            return Ok(users.Select(s => s.ToGetUserDto()));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID (int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepo.GetUserAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -42,12 +45,14 @@ namespace api.Controllers
 
         [HttpPost]
 
-        public IActionResult Create([FromBody] PostUserRequestDto userDto)
+        public async Task<IActionResult> Create([FromBody] PostUserRequestDto userDto)
         {
             var userModel = userDto.ToUserFromPostRequestDto();
 
-            _context.Users.Add(userModel);
-            _context.SaveChanges();
+            var createdUser = await _userRepo.CreateUserAsync(userModel);
+
+            if(!createdUser)
+                return NoContent();
 
             return CreatedAtAction(nameof(GetByID), new { id = userModel.Id}, userModel.ToGetUserDto());
         }
@@ -56,36 +61,29 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
         {
-            var userModel = await _context.Users.FindAsync(id);
+            var userModel = await _userRepo.GetUserAsync(id);
             if (userModel == null)
             {
                 return NotFound();
             }
 
-            userModel.FirstName = userDto.FirstName;
-            userModel.LastName = userDto.LastName;
-            userModel.Age = userDto.Age;
-            userModel.Email = userDto.Email;
-            userModel.PhoneNumber = userDto.PhoneNumber;
-
-            await _context.SaveChangesAsync();
+            await _userRepo.UpdateUserAsync(userModel, userDto);
 
             return Ok(userModel.ToGetUserDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var userModel = _context.Users.Find(id);
+            var userModel = await _userRepo.GetUserAsync(id);
 
             if(userModel == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(userModel);
-            _context.SaveChanges();
+            _userRepo.DeleteUser(userModel);
 
             return NoContent();
         }
