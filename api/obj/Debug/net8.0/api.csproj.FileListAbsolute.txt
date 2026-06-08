@@ -132,3 +132,4 @@
 /home/yak/repos/net8-core-examples/api/bin/Debug/net8.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 /home/yak/repos/net8-core-examples/api/bin/Debug/net8.0/Newtonsoft.Json.dll
 /home/yak/repos/net8-core-examples/api/bin/Debug/net8.0/Newtonsoft.Json.Bson.dll
+/home/yak/repos/net8-core-examples/api/bin/Debug/net8.0/System.Linq.Dynamic.Core.dll

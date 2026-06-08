@@ -33,7 +33,7 @@ namespace api.Controllers
             return Ok(users.Select(s => s.ToGetUserDto()));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByID (int id)
         {
             var user = await _userRepo.GetUserWithAccountAsync(id);
@@ -48,6 +48,9 @@ namespace api.Controllers
 
         public async Task<IActionResult> Create([FromBody] PostUserRequestDto userDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
             var userModel = userDto.ToUserFromPostRequestDto();
 
             var createdUser = await _userRepo.CreateAsync(userModel);
@@ -59,9 +62,12 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var userModel = await _userRepo.GetByIdAsync(id);
             if (userModel == null)
             {
@@ -74,7 +80,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var userModel = await _userRepo.GetByIdAsync(id);

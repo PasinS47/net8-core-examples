@@ -31,7 +31,7 @@ namespace api.Controllers
             return Ok(accounts.Select(a => a.ToGetAccountDto()));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
 
         public async Task<IActionResult> GetByID(int id)
         {
@@ -58,7 +58,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int}")]
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAccountRequestDto accountDto)
         {
@@ -75,7 +75,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var accountModel = await _accountRepo.GetByIdAsync(id);
