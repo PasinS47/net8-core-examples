@@ -7,12 +7,9 @@ using api.Dtos.Accounts;
 
 namespace api.Interfaces
 {
-    public interface IAccountRepository
+    public interface IAccountRepository : IBaseRepository<Account>
     {
-        Task<List<Account>> GetAllAsync();
-        Task<Account?> GetAccountAsync(int id);
         Task<bool> CreateAccountAsync(Account account);
         Task UpdateAccountAsync(Account accountModel, UpdateAccountRequestDto accountDto);
-        void DeleteAccount(Account account);
     }
 }

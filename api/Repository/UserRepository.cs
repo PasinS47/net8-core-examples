@@ -12,21 +12,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly ApplicationDBContext _context;
 
-        public UserRepository(ApplicationDBContext context)
+        public UserRepository(ApplicationDBContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<List<User>> GetAllAsync()
+        public async Task<List<User>> GetAllWithAccountAsync()
         {
             return await _context.Users.Include(a => a.Accounts).ToListAsync();
         }
 
-        public async Task<User?> GetUserAsync(int id)
+        public async Task<User?> GetUserWithAccountAsync(int id)
         {
             return await _context.Users.Include(a => a.Accounts).FirstOrDefaultAsync(i => i.Id == id);
         }
@@ -51,12 +51,6 @@ namespace api.Repository
             userModel.PhoneNumber = userDto.PhoneNumber;
 
             await _context.SaveChangesAsync();
-        }
-
-        public void DeleteUser(User user)
-        {
-            _context.Users.Remove(user);
-            _context.SaveChanges();
         }
     }
 }

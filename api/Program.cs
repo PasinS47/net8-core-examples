@@ -36,6 +36,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseMySQL(connectionString);
 });
 
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();

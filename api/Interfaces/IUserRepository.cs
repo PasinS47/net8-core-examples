@@ -7,12 +7,11 @@ using api.Dtos.Users;
 
 namespace api.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
-        Task<List<User>> GetAllAsync();
-        Task<User?> GetUserAsync(int id);
+        Task<List<User>> GetAllWithAccountAsync();
+        Task<User?> GetUserWithAccountAsync(int id);
         Task<bool> CreateUserAsync(User user);
         Task UpdateUserAsync(User userModel, UpdateUserRequestDto userDto);
-        void DeleteUser(User user);
     }
 }

@@ -34,7 +34,7 @@ namespace api.Controllers
 
         public async Task<IActionResult> GetByID(int id)
         {
-            var account = await _accountRepo.GetAccountAsync(id);
+            var account = await _accountRepo.GetByIdAsync(id);
             if(account == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace api.Controllers
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAccountRequestDto accountDto)
         {
-            var accountModel = await _accountRepo.GetAccountAsync(id);
+            var accountModel = await _accountRepo.GetByIdAsync(id);
 
             if(accountModel == null)
             {
@@ -77,16 +77,20 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var accountModel = await _accountRepo.GetAccountAsync(id);
+            var accountModel = await _accountRepo.GetByIdAsync(id);
 
             if(accountModel == null)
             {
                 return NotFound();
             }
 
-            _accountRepo.DeleteAccount(accountModel);
+            _accountRepo.Delete(accountModel);
+            var success = await _accountRepo.SaveChangesAsync();
 
-            return NoContent();
+            if(!success)
+                return StatusCode(500, "Unable to save change");
+
+            return StatusCode(200, "Delete Successfully");
         }
     }
 }

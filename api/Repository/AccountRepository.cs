@@ -10,23 +10,13 @@ using api.Interfaces;
 
 namespace api.Repository
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         private readonly ApplicationDBContext _context;
 
-        public AccountRepository(ApplicationDBContext context)
+        public AccountRepository(ApplicationDBContext context) : base(context)
         {
             _context = context;
-        }
-
-        public async Task<List<Account>> GetAllAsync()
-        {
-            return await _context.Accounts.ToListAsync();
-        }
-
-        public async Task<Account?> GetAccountAsync(int id)
-        {
-            return await _context.Accounts.FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<bool> CreateAccountAsync(Account account)
@@ -45,12 +35,6 @@ namespace api.Repository
             accountModel.Balance = accountDto.Balance;
 
             await _context.SaveChangesAsync();
-        }
-
-        public void DeleteAccount(Account account)
-        {
-            _context.Accounts.Remove(account);
-            _context.SaveChanges();
         }
     }
 }

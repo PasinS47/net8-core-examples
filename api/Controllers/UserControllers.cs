@@ -27,7 +27,7 @@ namespace api.Controllers
 
         public async Task<IActionResult> GetAll()
         {
-            var users = await _userRepo.GetAllAsync();
+            var users = await _userRepo.GetAllWithAccountAsync();
             
             return Ok(users.Select(s => s.ToGetUserDto()));
         }
@@ -35,7 +35,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID (int id)
         {
-            var user = await _userRepo.GetUserAsync(id);
+            var user = await _userRepo.GetUserWithAccountAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
         {
-            var userModel = await _userRepo.GetUserAsync(id);
+            var userModel = await _userRepo.GetByIdAsync(id);
             if (userModel == null)
             {
                 return NotFound();
@@ -76,14 +76,18 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var userModel = await _userRepo.GetUserAsync(id);
+            var userModel = await _userRepo.GetByIdAsync(id);
 
             if(userModel == null)
             {
                 return NotFound();
             }
 
-            _userRepo.DeleteUser(userModel);
+            _userRepo.Delete(userModel);
+            var success = await _userRepo.SaveChangesAsync();
+
+            if(!success)
+                return StatusCode(500, "Unable to save change");
 
             return NoContent();
         }
