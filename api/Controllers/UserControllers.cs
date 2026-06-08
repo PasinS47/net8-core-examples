@@ -52,7 +52,7 @@ namespace api.Controllers
             var createdUser = await _userRepo.CreateUserAsync(userModel);
 
             if(!createdUser)
-                return NoContent();
+                return StatusCode(500, "Failed to create account");
 
             return CreatedAtAction(nameof(GetByID), new { id = userModel.Id}, userModel.ToGetUserDto());
         }

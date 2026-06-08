@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Accounts;
+using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,27 +15,26 @@ namespace api.Controllers
     [ApiController]
     public class AccountControllers : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-
-        public AccountControllers(ApplicationDBContext context)
+        private readonly IAccountRepository _accountRepo;
+        public AccountControllers(IAccountRepository accountRepository)
         {
-            _context = context;
+            _accountRepo = accountRepository;
         }
 
         [HttpGet]
 
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var accounts = _context.Accounts.ToList().Select(s => s.ToGetAccountDto());
+            var accounts = await _accountRepo.GetAllAsync();
 
-            return Ok(accounts);
+            return Ok(accounts.Select(a => a.ToGetAccountDto()));
         }
 
         [HttpGet("{id}")]
 
         public async Task<IActionResult> GetByID(int id)
         {
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _accountRepo.GetAccountAsync(id);
             if(account == null)
             {
                 return NotFound();
@@ -44,12 +44,14 @@ namespace api.Controllers
 
         [HttpPost]
 
-        public IActionResult Create([FromBody] PostAccountRequestDto accountDto)
+        public async Task<IActionResult> Create([FromBody] PostAccountRequestDto accountDto)
         {
             var accountModel = accountDto.ToAccountFromPostRequestDto();
 
-            _context.Accounts.Add(accountModel);
-            _context.SaveChanges();
+            var createdAccount = await _accountRepo.CreateAccountAsync(accountModel);
+
+            if(!createdAccount)
+                return StatusCode(500, "Failed to create account");
 
             return CreatedAtAction(nameof(GetByID), new { id = accountModel.Id}, accountModel.ToGetAccountDto());
         }
@@ -59,33 +61,30 @@ namespace api.Controllers
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAccountRequestDto accountDto)
         {
-            var accountModel = await _context.Accounts.FindAsync(id);
+            var accountModel = await _accountRepo.GetAccountAsync(id);
 
             if(accountModel == null)
             {
                 return NotFound();
             }
 
-            accountModel.Balance = accountDto.Balance;
-
-            await _context.SaveChangesAsync();
+            await _accountRepo.UpdateAccountAsync(accountModel, accountDto);
 
             return Ok(accountModel.ToGetAccountDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var accountModel = _context.Accounts.Find(id);
+            var accountModel = await _accountRepo.GetAccountAsync(id);
 
             if(accountModel == null)
             {
                 return NotFound();
             }
 
-            _context.Accounts.Remove(accountModel);
-            _context.SaveChanges();
+            _accountRepo.DeleteAccount(accountModel);
 
             return NoContent();
         }
