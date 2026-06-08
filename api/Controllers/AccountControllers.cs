@@ -7,6 +7,7 @@ using api.Data;
 using api.Dtos.Accounts;
 using api.Interfaces;
 using api.Mappers;
+using api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -23,9 +24,9 @@ namespace api.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var accounts = await _accountRepo.GetAllAsync();
+            var accounts = await _accountRepo.GetAllAsync(query);
 
             return Ok(accounts.Select(a => a.ToGetAccountDto()));
         }
@@ -48,7 +49,7 @@ namespace api.Controllers
         {
             var accountModel = accountDto.ToAccountFromPostRequestDto();
 
-            var createdAccount = await _accountRepo.CreateAccountAsync(accountModel);
+            var createdAccount = await _accountRepo.CreateAsync(accountModel);
 
             if(!createdAccount)
                 return StatusCode(500, "Failed to create account");

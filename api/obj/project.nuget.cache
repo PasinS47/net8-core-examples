@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "zzwUYU3F7cQ=",
+  "dgSpecHash": "VzBSrPIAnyA=",
   "success": true,
   "projectFilePath": "/home/yak/repos/net8-core-examples/api/api.csproj",
   "expectedPackageFiles": [
@@ -99,6 +99,7 @@
     "/home/yak/.nuget/packages/system.io.filesystem.primitives/4.3.0/system.io.filesystem.primitives.4.3.0.nupkg.sha512",
     "/home/yak/.nuget/packages/system.io.pipelines/6.0.3/system.io.pipelines.6.0.3.nupkg.sha512",
     "/home/yak/.nuget/packages/system.linq/4.3.0/system.linq.4.3.0.nupkg.sha512",
+    "/home/yak/.nuget/packages/system.linq.dynamic.core/1.7.2/system.linq.dynamic.core.1.7.2.nupkg.sha512",
     "/home/yak/.nuget/packages/system.linq.expressions/4.3.0/system.linq.expressions.4.3.0.nupkg.sha512",
     "/home/yak/.nuget/packages/system.net.http/4.3.0/system.net.http.4.3.0.nupkg.sha512",
     "/home/yak/.nuget/packages/system.net.primitives/4.3.0/system.net.primitives.4.3.0.nupkg.sha512",

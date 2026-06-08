@@ -19,17 +19,6 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<bool> CreateAccountAsync(Account account)
-        {
-            if(account == null)
-                return false;
-
-            await _context.Accounts.AddAsync(account);
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
-
         public async Task UpdateAccountAsync(Account accountModel, UpdateAccountRequestDto accountDto)
         {
             accountModel.Balance = accountDto.Balance;

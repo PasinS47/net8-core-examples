@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 using api.Data;
 using api.Interfaces;
 using api.Models;
 using api.Dtos.Users;
 using Microsoft.EntityFrameworkCore;
+using api.Helpers;
 
 namespace api.Repository
 {
@@ -21,25 +23,23 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<User>> GetAllWithAccountAsync()
+        public async Task<List<User>> GetAllWithAccountAsync(QueryObject queryObject)
         {
-            return await _context.Users.Include(a => a.Accounts).ToListAsync();
+            var datas = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+            {
+                var sortDirection = queryObject.IsDescending ? "descending" : "ascending";
+                datas = datas.OrderBy($"{queryObject.SortBy} {sortDirection}");
+            }
+
+            var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
+            return await datas.Skip(skipNumber).Take(queryObject.PageSize).Include(a => a.Accounts).ToListAsync();
         }
 
         public async Task<User?> GetUserWithAccountAsync(int id)
         {
             return await _context.Users.Include(a => a.Accounts).FirstOrDefaultAsync(i => i.Id == id);
-        }
-
-        public async Task<bool> CreateUserAsync(User user)
-        {
-            if(user == null)
-                return false;
-
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public async Task UpdateUserAsync(User userModel, UpdateUserRequestDto userDto)

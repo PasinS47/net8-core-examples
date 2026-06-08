@@ -9,7 +9,6 @@ namespace api.Interfaces
 {
     public interface IAccountRepository : IBaseRepository<Account>
     {
-        Task<bool> CreateAccountAsync(Account account);
         Task UpdateAccountAsync(Account accountModel, UpdateAccountRequestDto accountDto);
     }
 }
