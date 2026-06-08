@@ -41,16 +41,5 @@ namespace api.Repository
         {
             return await _context.Users.Include(a => a.Accounts).FirstOrDefaultAsync(i => i.Id == id);
         }
-
-        public async Task UpdateUserAsync(User userModel, UpdateUserRequestDto userDto)
-        {
-            userModel.FirstName = userDto.FirstName;
-            userModel.LastName = userDto.LastName;
-            userModel.Age = userDto.Age;
-            userModel.Email = userDto.Email;
-            userModel.PhoneNumber = userDto.PhoneNumber;
-
-            await _context.SaveChangesAsync();
-        }
     }
 }

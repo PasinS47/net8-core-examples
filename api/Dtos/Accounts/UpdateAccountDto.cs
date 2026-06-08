@@ -7,6 +7,6 @@ namespace api.Dtos.Accounts
 {
     public class UpdateAccountRequestDto
     {
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
     }
 }

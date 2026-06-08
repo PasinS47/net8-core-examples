@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using api.Data;
 using api.Dtos.Accounts;
 using api.Interfaces;
 using api.Mappers;
@@ -69,7 +68,13 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            await _accountRepo.UpdateAccountAsync(accountModel, accountDto);
+            if(accountDto.Balance != null)
+                accountModel.Balance = (decimal)accountDto.Balance;
+
+            var success = await _accountRepo.SaveChangesAsync();
+
+            if(!success)
+                return StatusCode(500, "Unable to save change");
 
             return Ok(accountModel.ToGetAccountDto());
         }

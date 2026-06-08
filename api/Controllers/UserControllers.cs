@@ -26,7 +26,7 @@ namespace api.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAll(QueryObject queryObject)
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
         {
             var users = await _userRepo.GetAllWithAccountAsync(queryObject);
             
@@ -65,8 +65,6 @@ namespace api.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
         {
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var userModel = await _userRepo.GetByIdAsync(id);
             if (userModel == null)
@@ -74,7 +72,21 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            await _userRepo.UpdateUserAsync(userModel, userDto);
+            if(!string.IsNullOrWhiteSpace(userDto.FirstName))
+                userModel.FirstName = userDto.FirstName;
+            if(!string.IsNullOrWhiteSpace(userDto.LastName))
+                userModel.LastName = userDto.LastName;
+            if(userDto.Age != null)
+                userModel.Age = (int)userDto.Age;
+            if(!string.IsNullOrWhiteSpace(userDto.Email))
+                userModel.Email = userDto.Email;
+            if(!string.IsNullOrWhiteSpace(userDto.PhoneNumber))
+                userModel.PhoneNumber = userDto.PhoneNumber;
+
+            var success = await _userRepo.SaveChangesAsync();
+
+            if(!success)
+                return StatusCode(500, "Unable to save change");
 
             return Ok(userModel.ToGetUserDto());
         }

@@ -12,6 +12,5 @@ namespace api.Interfaces
     {
         Task<List<User>> GetAllWithAccountAsync(QueryObject queryObject);
         Task<User?> GetUserWithAccountAsync(int id);
-        Task UpdateUserAsync(User userModel, UpdateUserRequestDto userDto);
     }
 }

@@ -18,12 +18,5 @@ namespace api.Repository
         {
             _context = context;
         }
-
-        public async Task UpdateAccountAsync(Account accountModel, UpdateAccountRequestDto accountDto)
-        {
-            accountModel.Balance = accountDto.Balance;
-
-            await _context.SaveChangesAsync();
-        }
     }
 }
