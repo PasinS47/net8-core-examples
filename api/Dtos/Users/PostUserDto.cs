@@ -21,6 +21,7 @@ namespace api.Dtos.Users
 
         public string PhoneNumber { get; set; } = string.Empty;
 
+        [Required]
         public string Password { get; set; } = string.Empty;
     }
 }
